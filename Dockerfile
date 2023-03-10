@@ -16,5 +16,8 @@ RUN go test -v
 # Build the executable
 RUN go build -o weather-station
 
+# Make the port available outside the container
+EXPOSE 80
+
 # Run the executable
 ENTRYPOINT [ "/app/weather-station" ]
