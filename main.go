@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 
 	"golang.org/x/net/html/charset"
 )
@@ -42,7 +43,13 @@ type Observation struct {
 }
 
 func main() {
-	resp, err := http.Get("https://w1.weather.gov/xml/current_obs/KPDX.xml")
+	if len(os.Args) < 2 {
+		fmt.Println("Please provide a location")
+		os.Exit(1)
+	}
+	location := os.Args[1]
+
+	resp, err := http.Get(fmt.Sprintf("http://w1.weather.gov/xml/current_obs/%s.xml", location))
 	if err != nil {
 		fmt.Printf("Error: %v", err)
 	}
