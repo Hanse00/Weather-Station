@@ -16,8 +16,9 @@ RUN go test -v
 # Build the executable
 RUN go build -o weather-station
 
-# Make the port available outside the container
-EXPOSE 80
+# Set the default port for the container to use
+# This can be overridden at runtime
+ENV HTTP_PORT=8080
 
 # Run the executable
 ENTRYPOINT [ "/app/weather-station" ]
