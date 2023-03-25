@@ -25,5 +25,9 @@ COPY --from=build /app/weather-station /weather-station
 # This can be overridden at runtime
 ENV HTTP_PORT=8080
 
+# Set the default address for the Redis server
+# This can be overridden at runtime
+ENV REDIS_ADDR="host.docker.internal:6379"
+
 # Run the executable
 ENTRYPOINT [ "/weather-station" ]
