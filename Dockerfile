@@ -1,5 +1,4 @@
-FROM golang:1.20
-
+FROM golang:1.20 AS base
 WORKDIR /app
 
 # Download any required modules
@@ -10,15 +9,21 @@ RUN go mod download
 # Copy the source code
 COPY *.go .
 
-# Run the tests
-RUN go test -v
+FROM base as test
+# When test is executed, run the tests
+CMD [ "go", "test", "-v", "." ]
 
+FROM base as build
 # Build the executable
-RUN go build -o weather-station
+WORKDIR /app
+RUN CGO_ENABLED=0 go build -o weather-station
+
+FROM gcr.io/distroless/static-debian11 as prod
+COPY --from=build /app/weather-station /weather-station
 
 # Set the default port for the container to use
 # This can be overridden at runtime
 ENV HTTP_PORT=8080
 
 # Run the executable
-ENTRYPOINT [ "/app/weather-station" ]
+ENTRYPOINT [ "/weather-station" ]
